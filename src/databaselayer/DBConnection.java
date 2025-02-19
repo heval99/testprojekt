@@ -14,8 +14,8 @@ public class DBConnection {
     
     private static String  userName = ";user=sa";
     private static String password = ";password=secret";
-    private static String encryption = ";encrypt=false";
-   
+    private static String encryption = ";encrypt=false;trustServerCertificate=true";
+
     private DatabaseMetaData dma;
     private static Connection con;
     
