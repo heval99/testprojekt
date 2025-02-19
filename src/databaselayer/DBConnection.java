@@ -4,97 +4,81 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 
-
 public class DBConnection {   
-	//Constants used to get access to the database
-	
-	//private static final String  driver = "jdbc:sqlserver://localhost:1433";
-	private static final String serverAddress = "jdbc:sqlserver://localhost:1433";
-    private static final String  databaseName = ";databaseName=PayStation";
-    
-    private static String  userName = ";user=sa";
-    private static String password = ";password=secret";
-    private static String encryption = ";encrypt=false;trustServerCertificate=true";
+    // Constants for database connection
+    private static final String SERVER_ADDRESS = "jdbc:sqlserver://localhost:1433";
+    private static final String DATABASE_NAME = ";databaseName=PayStation";
+    private static final String USERNAME = ";user=sa";
+    private static final String PASSWORD = ";password=secret";
+    private static final String SECURITY = ";encrypt=false;trustServerCertificate=true";
 
     private DatabaseMetaData dma;
     private static Connection con;
-    
-    // an instance of the class is generated
-    private static DBConnection  instance = null;
+    private static DBConnection instance = null;
 
-    // the constructor is private to ensure that only one object of this class is created
-    private DBConnection()
-    {
-    	//String url = driver + databaseName + userName + password + encryption;
-    	String url = serverAddress+ databaseName + userName + password + encryption;
-    	System.out.println("URL: " + url);
+    // Private constructor to enforce singleton pattern
+    private DBConnection() {
+        String url = SERVER_ADDRESS + DATABASE_NAME + USERNAME + PASSWORD + SECURITY;
+        System.out.println("Attempting to connect to: " + url);
 
-        try{
-            //load of driver
+        try {
+            // Load SQL Server JDBC driver
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            System.out.println("Driver class loaded ok");
+            System.out.println("Driver loaded successfully");
           
-        }
-        catch(Exception e){
-            System.out.println("Cannot find the driver");
-            System.out.println(e.getMessage());
-        }
-        try{
-            //connection to the database
+            // Establish database connection
             con = DriverManager.getConnection(url);
             con.setAutoCommit(true);
-            dma = con.getMetaData(); // get meta data
-            System.out.println("Connection to " + dma.getURL());
-            System.out.println("Driver " + dma.getDriverName());
-            System.out.println("Database product name " + dma.getDatabaseProductName());
-        }//end try
-        catch(Exception e){
-            System.out.println("Problems with the connection to the database:");
-            System.out.println(e.getMessage());
-            System.out.println(url);
-        }//end catch
-    }//end  constructor
-	   
-  //closeDb: closes the connection to the database
-    public static void closeConnection()
-    {
-       	try{
-            con.close();
-            instance= null;
-            System.out.println("The connection is closed");
+            dma = con.getMetaData(); 
+
+            System.out.println("Connected to: " + dma.getURL());
+            System.out.println("Driver: " + dma.getDriverName());
+            System.out.println("Database: " + dma.getDatabaseProductName());
+
+        } catch (ClassNotFoundException e) {
+            System.err.println("JDBC Driver not found: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Failed to connect to database: " + e.getMessage());
         }
-         catch (Exception e){
-            System.out.println("Error trying to close the database " +  e.getMessage());
-         }
-    }//end closeDB
-		
-    //getDBcon: returns the singleton instance of the DB connection
-    public Connection getDBcon()
-    {
-       return con;
     }
-    //getDBcon: returns the singleton instance of the DB connection
-    public static boolean instanceIsNull()
-    {
-       return (instance == null);
-    }    
-    //this method is used to get the instance of the connection
-    public static DBConnection getInstance()
-    {
-        if (instance == null)
-        {
-          instance = new DBConnection();
+
+    // Closes the database connection safely
+    public static void closeConnection() {
+        try {
+            if (con != null && !con.isClosed()) {
+                con.close();
+                instance = null;
+                System.out.println("Database connection closed.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error closing database: " + e.getMessage());
+        }
+    }
+
+    // Returns the singleton instance of the database connection
+    public static DBConnection getInstance() {
+        if (instance == null) {
+            instance = new DBConnection();
         }
         return instance;
     }
-    public static boolean getOpenStatus() {
-    	boolean isOpen = false;
-    	try {
-    		isOpen = (!con.isClosed());
-    	} catch (Exception sclExc) {
-    		isOpen = false;
-    	}
-    	return isOpen;
+
+    // Returns the active connection object
+    public Connection getDBcon() {
+        return con;
     }
 
-}//end DbConnection
+    // Checks if the instance is null
+    public static boolean instanceIsNull() {
+        return (instance == null);
+    }
+
+    // Checks if the database connection is open
+    public static boolean getOpenStatus() {
+        try {
+            return (con != null && !con.isClosed());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}
