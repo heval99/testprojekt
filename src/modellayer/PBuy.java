@@ -3,7 +3,7 @@ package modellayer;
 import java.time.LocalDate;
 
 /**
- * Inspired by the book: Flexible, Reliable Software Henrik Bærbak Christensen:
+ * Inspired by the book: Flexible, Reliable Software Henrik Bï¿½rbak Christensen:
  * Flexible, Reliable Software. Taylor and Francis Group, LLC 2010
  */
 
@@ -72,6 +72,17 @@ public class PBuy {
 
 	public void setAssociatedPaystation(PPayStation associatedPaystation) {
 		this.associatedPaystation = associatedPaystation;
+	}
+	
+	public PBuy(String ifStringIsTest) {
+		LocalDate buyLocalDateTime = LocalDate.of(2025,2,19);
+		
+		if(ifStringIsTest.equals("test")) {
+			this.buyTime=buyLocalDateTime;
+			this.duration  =  80;
+			this.payedAmount = 200;
+			this.associatedPaystation = new PPayStation(1,"Pay Station Test");
+		}
 	}
 	
 }
