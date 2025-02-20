@@ -1,6 +1,7 @@
 package databaselayer;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.lang.NullPointerException;
 
 import modellayer.PBuy;
@@ -12,7 +13,7 @@ public class DatabasePBuy implements IDbPBuy {
 	public int insertParkingBuy(PBuy parkingBuy) throws DatabaseLayerException {
 		int insertedKey = 1;
 		
-		java.sql.Date sqldate = java.sql.Date.valueOf(parkingBuy.getBuyTime());
+		LocalDate sqldate = parkingBuy.getBuyTime();
 		PPayStation payStation = parkingBuy.getAssociatedPaystation();
 		
 		int parkingDuration = payStation.getTimeBoughtInMinutes();

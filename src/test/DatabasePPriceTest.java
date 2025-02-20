@@ -1,13 +1,12 @@
 package test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import databaselayer.DatabaseLayerException;
 import databaselayer.StubDatabasePPrice;
+import databaselayer.DatabaseLayerException;
 import modellayer.PPrice;
 import modellayer.PZone;
 

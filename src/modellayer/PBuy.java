@@ -34,6 +34,11 @@ public class PBuy {
 	}
 
 	
+	@Override
+	public String toString() {
+		return "PBuy [id=" + id + ", buyTime=" + buyTime + ", duration=" + duration + ", payedAmount=" + payedAmount
+				+ ", associatedPaystation=" + associatedPaystation + "]";
+	}
 	public long getId() {
 		return id;
 	}
@@ -75,12 +80,12 @@ public class PBuy {
 	}
 	
 	public PBuy(String ifStringIsTest) {
-		LocalDate buyLocalDateTime = LocalDate.of(2025,2,19);
+		LocalDate buyLocalDateTime = LocalDate.of(0,1,1);
 		
 		if(ifStringIsTest.equals("test")) {
 			this.buyTime=buyLocalDateTime;
-			this.duration  =  80;
-			this.payedAmount = 200;
+			this.duration  =  0;
+			this.payedAmount = 0;
 			this.associatedPaystation = new PPayStation(1,"Pay Station Test");
 		}
 	}
